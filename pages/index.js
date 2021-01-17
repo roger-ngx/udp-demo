@@ -42,11 +42,11 @@ export default function MachineComprehension({models}) {
 
   const handleScroll = () => {
     var st = window.pageYOffset || document.documentElement.scrollTop;
-    if (st > lastScrollTop){
-      console.log('scroll up', st - lastScrollTop);
-    } else {
-      console.log('scroll down', lastScrollTop - st);
-    }
+    // if (st > lastScrollTop){
+    //   console.log('scroll up', st - lastScrollTop);
+    // } else {
+    //   console.log('scroll down', lastScrollTop - st);
+    // }
     savedTranslate += (lastScrollTop - st)/2;
     setTranslateY(savedTranslate);
 
@@ -62,6 +62,8 @@ export default function MachineComprehension({models}) {
         context: originalData,
         question
       };
+
+      console.log(data);
 
       const res = await fetch(`/api/machine_comprehension`, {
         method: 'POST',
@@ -140,9 +142,9 @@ export default function MachineComprehension({models}) {
                   </FormControl>
                 </div>
 
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap'}}>
                   <Button
-                    style={{marginLeft: 'auto', marginRight: 20}}
+                    style={{marginLeft: 'auto'}}
                     variant='contained'
                     color='primary'
                     onClick={() => {
@@ -195,7 +197,9 @@ export default function MachineComprehension({models}) {
                   setQuestion(newInputValue);
                 }}
         
-                style={{ width: 300 }}
+                style={{ width: '100%' }}
+
+                freeSolo={true}
 
                 renderInput={(params) => <TextField
                   {...params}
@@ -215,7 +219,7 @@ export default function MachineComprehension({models}) {
                 >
                   {
                     processing ?
-                    <CircularProgress size={24} color='white' />
+                    <CircularProgress size={24} style={{color: 'white'}} />
                     :
                     'submit'
                   }
