@@ -111,7 +111,7 @@ export default function MachineComprehension({models}) {
                     <p>A messenger marketing solution</p>
                 </div>
                 <div style={{flex: 1}}>
-                  <img src='/img/annotation/NER.gif' style={{height: 300}}/>
+                  <img src='/img/annotation/demochatbot.gif' style={{height: 300}}/>
                 </div>
             </div>
           </div>
