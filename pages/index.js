@@ -110,7 +110,7 @@ export default function MachineComprehension({models}) {
                     <h1>Comprehensive Chatbot</h1>
                     <p>A messenger marketing solution</p>
                 </div>
-                <div style={{flex: 1}}>
+                <div style={{flex: 1, textAlign: 'right'}}>
                   <img src='/img/annotation/demochatbot.gif' style={{height: 300}}/>
                 </div>
             </div>
