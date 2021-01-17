@@ -228,7 +228,7 @@ export default function MachineComprehension({models}) {
               
               <h2 style={{margin: '0 0 16px 0'}}>Result</h2>
               <TextField
-                placeholder='Five answers for the above question will be displayed here'
+                placeholder='Three answers (with highest probabilities) for the above question will be displayed here'
                 variant='outlined'
                 style={{width: '100%'}}
                 multiline={true}
