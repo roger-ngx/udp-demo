@@ -75,7 +75,7 @@ export default function MachineComprehension({models}) {
 
       const resData = await res.json();
 
-      const sortedData = map(orderBy(resData, ['probability'], ['desc']), data => `${data.text} (${(data.probability * 100).toFixed(2)}%)`);
+      const sortedData = map(orderBy(resData, ['probability'], ['desc']), data => `${data.text} (${(data.probability * 100).toFixed(2)}%)`).slice(0, 3);
 
       setResult(reduce(sortedData, (result, data) => {
         result += data + '\n\n';
