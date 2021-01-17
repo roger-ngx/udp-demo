@@ -1,76 +1,281 @@
-import Head from 'next/head'
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import { useState, useRef, useEffect } from 'react';
+import { TextField, Button, CircularProgress } from '@material-ui/core';
+import { throttle, map, orderBy, reduce } from 'lodash';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default function Home() {
+import DemoPage from '../components/DemoPage';
+import { sampleTexts, sampleQuestions } from '../utils/mc_test_data';
+
+let lastScrollTop = 0;
+let savedTranslate = 0;
+
+
+const useStyles = makeStyles(theme => ({
+  disabledInput: {
+    color: theme.palette.text.primary,
+  },
+}));
+
+export default function MachineComprehension({models}) {
+
+  const classes = useStyles();
+
+  const [ translateY, setTranslateY ] = useState(0);
+  const [ originalData, setOriginalData ] = useState('');
+  const [ questions, setQuestions ] = useState([]);
+  const [ question, setQuestion ] = useState();
+
+  const [ result, setResult ] = useState('');
+  const [ processing, setProcessing ] = useState(false);
+
+  useEffect(() => {
+    const handler = throttle(handleScroll, 10, { trailing: false});
+
+    window.addEventListener('scroll', handler);
+
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  const handleScroll = () => {
+    var st = window.pageYOffset || document.documentElement.scrollTop;
+    if (st > lastScrollTop){
+      console.log('scroll up', st - lastScrollTop);
+    } else {
+      console.log('scroll down', lastScrollTop - st);
+    }
+    savedTranslate += (lastScrollTop - st)/2;
+    setTranslateY(savedTranslate);
+
+    lastScrollTop = st <= 0 ? 0 : st;
+  };
+
+  const requestForAnswer = async () => {
+    setProcessing(true);
+    setResult('');
+
+    try{
+      const data = {
+        context: originalData,
+        question
+      };
+
+      const res = await fetch(`/api/machine_comprehension`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      const resData = await res.json();
+
+      const sortedData = map(orderBy(resData, ['probability'], ['desc']), data => `${data.text} (${(data.probability * 100).toFixed(2)}%)`);
+
+      setResult(reduce(sortedData, (result, data) => {
+        result += data + '\n\n';
+        return result; 
+      }, ''));
+    }catch(ex){
+      console.log(ex);
+    }
+
+    setProcessing(false);
+  };
+
   return (
     <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
+      <DemoPage active='machine'>
+        <div style={{position: 'relative'}}>
+          <div
+            style={{
+              backgroundColor: '#6f42c1',
+              color: 'white',
+              padding: '55px 0',
+              width: '100%',
+              position: 'fixed',
+              top: 0, left: 0,
+              zIndex: -1,
+              height: 500,
+              transform: `translateY(${translateY}px)`
+            }}
           >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+            <div className='grid' style={{flex: 1}}>
+                <div style={{flex: 1, marginRight: 20}}>
+                    <h1>UDP Comprehensive Chatbot</h1>
+                    <p>A messenger marketing solution</p>
+                </div>
+                <div style={{flex: 1}}>
+                  <img src='/img/annotation/NER.gif' style={{height: 300}}/>
+                </div>
+            </div>
+          </div>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          <div id='content' style={{marginTop: 400, backgroundColor: 'white', padding: '55px 0'}}>
+          <div style={{padding: '0 20%', marginTop: 55}}>
+                <h1>How it works</h1>
+                <p>UDP Chatbot aims to serve various domains separately. This means that UDP Chatbot can comprehend a domain knowledge through input text regarding the domain. If you need to deploy UDP Chatbot for your particular business, we just input its information regarding your products, services, or any content that Chatbot is desired to comprehend and answer your customers.</p>
+                <p>To demonstrate the ability to comprehend an input knowledge, we built a Machine Reading Comprehension system as web application where we can input knowledge (so-called context) in the form of sentences in text format. And we can also input questions related to the input context. The system will answer our question based on the input context.</p>
+          </div>
+
+             <div style={{padding: '0 20%', marginTop: 55}}>
+              <div className='column' style={{marginBottom: 24}}>
+                <div style={{display: 'flex', flexDirection: 'row', flex: 1, alignItems: 'center'}}>
+                  <h2 style={{margin: 0}}>Input text</h2>
+                  <FormControl variant='outlined' style={{width: 200, marginLeft: 24}}>
+                    {/* <InputLabel id="demo-simple-select-label">English</InputLabel> */}
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value='ko'
+                      style={{height: 40}}
+                    >
+                      {/* <MenuItem value='en'>English</MenuItem> */}
+                      <MenuItem value='ko'>한국어</MenuItem>
+                      {/* <MenuItem value='vi'>Tiếng Việt</MenuItem> */}
+                    </Select>
+                  </FormControl>
+                </div>
+
+                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <Button
+                    style={{marginLeft: 'auto', marginRight: 20}}
+                    variant='contained'
+                    color='primary'
+                    onClick={() => {
+                      setOriginalData(sampleTexts[0]);
+                      setQuestions(sampleQuestions[0]);
+                      setQuestion();
+                    }}
+                  >
+                    Example 1
+                  </Button>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={() => {
+                      setOriginalData(sampleTexts[1]);
+                      setQuestions(sampleQuestions[1]);
+                      setQuestion();
+                    }}
+                  >
+                    Example 2
+                  </Button>
+                </div>
+              </div>
+              <TextField
+                placeholder='Add a sample text'
+                variant='outlined'
+                style={{width: '100%'}}
+                multiline={true}
+                rows={5}
+                value={originalData}
+                onChange={e => setOriginalData(e.target.value)}
+              />
+
+              {/* <TextField
+                placeholder='Type a question'
+                variant='outlined'
+                style={{width: '100%', marginTop: 12}}
+                value={question}
+                onChange={e => setQuestion(e.target.value)}
+              /> */}
+
+              <Autocomplete
+                key={originalData}
+                options={questions}
+                value={question}
+                onChange={(e, value) => setQuestion(value)}
+
+                inputValue={question}
+                onInputChange={(event, newInputValue) => {
+                  setQuestion(newInputValue);
+                }}
+        
+                style={{ width: 300 }}
+
+                renderInput={(params) => <TextField
+                  {...params}
+                  placeholder='Select a question'
+                  variant='outlined'
+                  style={{width: '100%', marginTop: 12}}
+                />}
+              />
+
+              <div style={{textAlign: 'right', marginBottom: 30}}>
+                <Button
+                  variant='contained'
+                  color='secondary'
+                  style={{margin: '10px 0', minWidth: 90}}
+                  onClick={requestForAnswer}
+                  disabled={processing}
+                >
+                  {
+                    processing ?
+                    <CircularProgress size={24} color='white' />
+                    :
+                    'submit'
+                  }
+                </Button>
+              </div>
+              
+              <h2 style={{margin: '0 0 16px 0'}}>Result</h2>
+              <TextField
+                placeholder='Input text above or try analyzer with our example'
+                variant='outlined'
+                style={{width: '100%'}}
+                multiline={true}
+                rows={10}
+                disabled
+                value={result}
+                InputProps={{ classes: { disabled: classes.disabledInput } }}
+              />
+            </div>  
+
+            <div className='grid-column'>
+              <div>
+                  <h1>Features</h1>
+                  <p></p>
+              </div>
+              <div style={{flex: 1, textAlign: 'center'}}>
+                <img src='/img/annotation/Chatbot_features.PNG' style={{width: '80%'}}/>
+              </div>
+            </div>
+
+            <div className='grid-column'>
+              <div>
+                  <h1>Architecture</h1>
+                  <p></p>
+              </div>
+              <div style={{flex: 1, textAlign: 'center'}}>
+                <img src='/img/annotation/Chatbot_Architecture.PNG' style={{width: '80%'}}/>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
+      </DemoPage>
 
       <style jsx>{`
         .container {
+          min-width: 100vw;
           min-height: 100vh;
-          padding: 0 0.5rem;
+          padding: 0;
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          align-items: center;
+        }
+
+        #content p {
+            line-height: 2.0
+        }
+
+        h1 {
+          margin-top: 0
         }
 
         main {
-          padding: 5rem 0;
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -80,7 +285,6 @@ export default function Home() {
 
         footer {
           width: 100%;
-          height: 100px;
           border-top: 1px solid #eaeaea;
           display: flex;
           justify-content: center;
@@ -138,16 +342,6 @@ export default function Home() {
             DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
         }
 
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
         .card {
           margin: 1rem;
           flex-basis: 45%;
@@ -181,13 +375,6 @@ export default function Home() {
         .logo {
           height: 1em;
         }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
       `}</style>
 
       <style jsx global>{`
@@ -195,9 +382,41 @@ export default function Home() {
         body {
           padding: 0;
           margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
+          font-family: 'Open Sans', sans-serif;
+          text-rendering: optimizeLegibility !important;
+          -webkit-font-smoothing: antialiased !important;
+          color: #777;
+          font-weight: 400;
+        }
+
+        .column {
+          display: flex;
+          flex-direction: row;
+        }
+
+        .grid {
+          display: flex;
+          flex-direction: row;
+          padding: 0 20%;
+        }
+
+        .grid-column {
+          display: flex;
+          flex-direction: column;
+          padding: 0 20%;
+          margin-top: 55px
+        }
+
+        @media (max-width: 600px) {
+          .grid {
+            width: 100%;
+            flex-direction: column;
+          }
+
+          .column {
+            display: flex;
+            flex-direction: column;
+          }
         }
 
         * {
@@ -207,3 +426,18 @@ export default function Home() {
     </div>
   )
 }
+
+// export async function getStaticProps() {
+//   const res = await fetch('', {
+//     headers: {
+//       'Authorization' : `Basic ${Buffer.from('twin:twin', 'utf-8').toString()}`
+//     }
+//   });
+//   const data = await res.json();
+
+//   return {
+//     props: {
+//       models: data
+//     }
+//   }
+// }
