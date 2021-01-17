@@ -151,9 +151,9 @@ export default function MachineComprehension({models}) {
                       setQuestion();
                     }}
                   >
-                    Example 1
+                    Example
                   </Button>
-                  <Button
+                  {/* <Button
                     variant='contained'
                     color='primary'
                     onClick={() => {
@@ -163,11 +163,11 @@ export default function MachineComprehension({models}) {
                     }}
                   >
                     Example 2
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
               <TextField
-                placeholder='Add a sample text'
+                placeholder='Insert a paragraph of context'
                 variant='outlined'
                 style={{width: '100%'}}
                 multiline={true}
@@ -199,7 +199,7 @@ export default function MachineComprehension({models}) {
 
                 renderInput={(params) => <TextField
                   {...params}
-                  placeholder='Select a question'
+                  placeholder='Select or type a question'
                   variant='outlined'
                   style={{width: '100%', marginTop: 12}}
                 />}
@@ -224,7 +224,7 @@ export default function MachineComprehension({models}) {
               
               <h2 style={{margin: '0 0 16px 0'}}>Result</h2>
               <TextField
-                placeholder='Input text above or try analyzer with our example'
+                placeholder='Five answers for the above question will be displayed here'
                 variant='outlined'
                 style={{width: '100%'}}
                 multiline={true}
