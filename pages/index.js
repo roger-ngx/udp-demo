@@ -3,7 +3,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { useState, useRef, useEffect } from 'react';
 import { TextField, Button, CircularProgress } from '@material-ui/core';
-import { throttle, map, orderBy, reduce } from 'lodash';
+import { throttle, map, orderBy, reduce, isEmpty } from 'lodash';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -173,7 +173,7 @@ export default function MachineComprehension({models}) {
                 variant='outlined'
                 style={{width: '100%'}}
                 multiline={true}
-                rows={5}
+                rows={10}
                 value={originalData}
                 onChange={e => setOriginalData(e.target.value)}
               />
@@ -215,7 +215,7 @@ export default function MachineComprehension({models}) {
                   color='secondary'
                   style={{margin: '10px 0', minWidth: 90}}
                   onClick={requestForAnswer}
-                  disabled={processing}
+                  disabled={processing || isEmpty(question)}
                 >
                   {
                     processing ?
@@ -232,7 +232,7 @@ export default function MachineComprehension({models}) {
                 variant='outlined'
                 style={{width: '100%'}}
                 multiline={true}
-                rows={10}
+                rows={6}
                 disabled
                 value={result}
                 InputProps={{ classes: { disabled: classes.disabledInput } }}
