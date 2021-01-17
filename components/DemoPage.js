@@ -14,7 +14,7 @@ const DemoPage = ({active, children}) => {
         <main>
             {children}
         </main>
-        <Footer />
+        {/* <Footer /> */}
     </div>)
 }
 

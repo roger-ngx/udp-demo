@@ -105,7 +105,7 @@ export default function MachineComprehension({models}) {
           >
             <div className='grid' style={{flex: 1}}>
                 <div style={{flex: 1, marginRight: 20}}>
-                    <h1>UDP Comprehensive Chatbot</h1>
+                    <h1>Comprehensive Chatbot</h1>
                     <p>A messenger marketing solution</p>
                 </div>
                 <div style={{flex: 1}}>
@@ -117,7 +117,7 @@ export default function MachineComprehension({models}) {
           <div id='content' style={{marginTop: 400, backgroundColor: 'white', padding: '55px 0'}}>
           <div style={{padding: '0 20%', marginTop: 55}}>
                 <h1>How it works</h1>
-                <p>UDP Chatbot aims to serve various domains separately. This means that UDP Chatbot can comprehend a domain knowledge through input text regarding the domain. If you need to deploy UDP Chatbot for your particular business, we just input its information regarding your products, services, or any content that Chatbot is desired to comprehend and answer your customers.</p>
+                <p>Comprehensive Chatbot aims to serve various domains separately. This means that Comprehensive Chatbot can comprehend a domain knowledge through input text regarding the domain. If you need to deploy Comprehensive Chatbot for your particular business, we just input its information regarding your products, services, or any content that Chatbot is desired to comprehend and answer your customers.</p>
                 <p>To demonstrate the ability to comprehend an input knowledge, we built a Machine Reading Comprehension system as web application where we can input knowledge (so-called context) in the form of sentences in text format. And we can also input questions related to the input context. The system will answer our question based on the input context.</p>
           </div>
 
