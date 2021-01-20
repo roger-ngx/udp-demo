@@ -117,15 +117,15 @@ export default function MachineComprehension({models}) {
           </div>
 
           <div id='content' style={{marginTop: 400, backgroundColor: 'white', padding: '55px 0'}}>
-          <div style={{padding: '0 20%', marginTop: 55}}>
-                <h1>How it works</h1>
-                <p>Comprehensive Chatbot aims to serve various domains separately. This means that Comprehensive Chatbot can comprehend a domain knowledge through input text regarding the domain. If you need to deploy Comprehensive Chatbot for your particular business, we just input its information regarding your products, services, or any content that Chatbot is desired to comprehend and answer your customers.</p>
-                <p>To demonstrate the ability to comprehend an input knowledge, we built a Machine Reading Comprehension system as web application where we can input knowledge (so-called context) in the form of sentences in text format. And we can also input questions related to the input context. The system will answer our question based on the input context.</p>
-          </div>
+            <div className='grid-column'>
+                  <h1>How it works</h1>
+                  <p>Comprehensive Chatbot aims to serve various domains separately. This means that Comprehensive Chatbot can comprehend a domain knowledge through input text regarding the domain. If you need to deploy Comprehensive Chatbot for your particular business, we just input its information regarding your products, services, or any content that Chatbot is desired to comprehend and answer your customers.</p>
+                  <p>To demonstrate the ability to comprehend an input knowledge, we built a Machine Reading Comprehension system as web application where we can input knowledge (so-called context) in the form of sentences in text format. And we can also input questions related to the input context. The system will answer our question based on the input context.</p>
+            </div>
 
-             <div style={{padding: '0 20%', marginTop: 55}}>
-              <div className='column' style={{marginBottom: 24}}>
-                <div style={{display: 'flex', flexDirection: 'row', flex: 1, alignItems: 'center'}}>
+            <div className='grid-column'>
+              <div style={{display: 'flex', flexDirection: 'row', flex: 1, alignItems: 'center', flexWrap: 'wrap', marginTop: -16, marginBottom: 24}}>
+                <div style={{display: 'flex', flexDirection: 'row', flex: 1, alignItems: 'center', marginTop: 16}}>
                   <h2 style={{margin: 0}}>Input text</h2>
                   <FormControl variant='outlined' style={{width: 200, marginLeft: 24}}>
                     {/* <InputLabel id="demo-simple-select-label">English</InputLabel> */}
@@ -142,7 +142,7 @@ export default function MachineComprehension({models}) {
                   </FormControl>
                 </div>
 
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap'}}>
+                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', marginTop: 16}}>
                   <Button
                     style={{marginLeft: 'auto'}}
                     variant='contained'
@@ -168,6 +168,7 @@ export default function MachineComprehension({models}) {
                   </Button> */}
                 </div>
               </div>
+
               <TextField
                 placeholder='Insert a paragraph of context'
                 variant='outlined'
@@ -177,7 +178,7 @@ export default function MachineComprehension({models}) {
                 value={originalData}
                 onChange={e => setOriginalData(e.target.value)}
               />
-              <p style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+              <p style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 0}}>
                 {
                   size(originalData) > 3000 ? <div style={{color: 'red'}}>Max length is 3000 characters</div> : <div></div>
                 }
@@ -215,22 +216,20 @@ export default function MachineComprehension({models}) {
                 />}
               />
 
-              <div style={{textAlign: 'right', marginBottom: 30}}>
-                <Button
-                  variant='contained'
-                  color='secondary'
-                  style={{margin: '10px 0', minWidth: 90}}
-                  onClick={requestForAnswer}
-                  disabled={processing || isEmpty(question) || size(originalData) > 3000}
-                >
-                  {
-                    processing ?
-                    <CircularProgress size={24} style={{color: 'white'}} />
-                    :
-                    'submit'
-                  }
-                </Button>
-              </div>
+              <Button
+                variant='contained'
+                color='secondary'
+                style={{margin: '10px 0', minWidth: 90, marginLeft: 'auto'}}
+                onClick={requestForAnswer}
+                disabled={processing || isEmpty(question) || size(originalData) > 3000}
+              >
+                {
+                  processing ?
+                  <CircularProgress size={24} style={{color: 'white'}} />
+                  :
+                  'submit'
+                }
+              </Button>
               
               <h2 style={{margin: '0 0 16px 0'}}>Result</h2>
               <TextField
@@ -421,6 +420,11 @@ export default function MachineComprehension({models}) {
           .grid {
             width: 100%;
             flex-direction: column;
+            padding: 0 5%;
+          }
+
+          .grid-column {
+            padding: 0 5%;
           }
 
           .column {
