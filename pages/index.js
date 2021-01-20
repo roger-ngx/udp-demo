@@ -3,7 +3,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { useState, useRef, useEffect } from 'react';
 import { TextField, Button, CircularProgress } from '@material-ui/core';
-import { throttle, map, orderBy, reduce, isEmpty } from 'lodash';
+import { throttle, map, orderBy, reduce, isEmpty, size } from 'lodash';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -177,6 +177,12 @@ export default function MachineComprehension({models}) {
                 value={originalData}
                 onChange={e => setOriginalData(e.target.value)}
               />
+              <p style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                {
+                  size(originalData) > 3000 ? <div style={{color: 'red'}}>Max length is 3000 characters</div> : <div></div>
+                }
+                <div>{size(originalData)}/3000</div>
+              </p>
 
               {/* <TextField
                 placeholder='Type a question'
@@ -215,7 +221,7 @@ export default function MachineComprehension({models}) {
                   color='secondary'
                   style={{margin: '10px 0', minWidth: 90}}
                   onClick={requestForAnswer}
-                  disabled={processing || isEmpty(question)}
+                  disabled={processing || isEmpty(question) || size(originalData) > 3000}
                 >
                   {
                     processing ?
