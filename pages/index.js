@@ -232,16 +232,19 @@ export default function MachineComprehension({models}) {
               </Button>
               
               <h2 style={{margin: '0 0 16px 0'}}>Result</h2>
-              <TextField
-                placeholder='Three answers (with highest probabilities) for the above question will be displayed here'
-                variant='outlined'
-                style={{width: '100%'}}
-                multiline={true}
-                rows={6}
-                disabled
-                value={result}
-                InputProps={{ classes: { disabled: classes.disabledInput } }}
-              />
+
+              <div style={{width: '100%'}}>
+                <TextField
+                  placeholder='Three answers (with highest probabilities) for the above question will be displayed here'
+                  variant='outlined'
+                  style={{width: '100%'}}
+                  multiline={true}
+                  rows={6}
+                  disabled
+                  value={result}
+                  InputProps={{ classes: { disabled: classes.disabledInput } }}
+                />
+              </div>
             </div>  
 
             <div className='grid-column'>
